@@ -1,7 +1,8 @@
-import { screen, render } from '@testing-library/react'
+import { screen, render, findByText, findByTitle } from '@testing-library/react'
 import App from './App'
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
+import AppRoutes from '../../routes'
 
 describe('Componente <App />', () => {
     test('Deve permitir uma transação em Extrato', () => {
@@ -19,5 +20,17 @@ describe('Componente <App />', () => {
         const itemExtrato = screen.getByRole('listitem')
 
         expect(novaTransacao).toContainElement(itemExtrato)
+    });
+
+    test('Deve navegar até a página correspondente ao link clicado', async () => {
+        render(<AppRoutes />, { wrapper: BrowserRouter });
+
+        const linkPaginaCartoes = screen.getByText('Cartões');
+        expect(linkPaginaCartoes).toBeInTheDocument();
+
+        userEvent.click(linkPaginaCartoes);
+
+        const tituloPaginaCartoes = await screen.findByText('Meus cartões');
+        expect(tituloPaginaCartoes).toBeInTheDocument();
     })
 })
